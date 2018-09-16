@@ -1,3 +1,5 @@
+import os
+
 from cmd import Cmd
 
 from authid_agent_client.authid_agent_client import AuthIDAgentClient
@@ -146,6 +148,15 @@ class AgentClientCli(Cmd):
 
         print("status:", status)
         print("request info:", result)
+
+    def do_clear(self, args):
+        if os.name == "nt":
+            os.system("cls")
+        else:
+            os.system("clear")
+
+    def emptyline(self):
+        pass
 
     @staticmethod
     def request_callback(status, response: dict):
