@@ -1,5 +1,4 @@
 import requests
-import json
 
 from authid_agent_client.listeners.request_listener import RequestListener
 
@@ -15,12 +14,8 @@ TRANSFER_PATH = API_PATH + "ids:transfer/"
 CHALLENGES_PATH = API_PATH + "challenges/"
 SIGN_CHALLENGE_PATH = API_PATH + "challenges:sign"
 VERIFY_CHALLENGE_PATH = API_PATH + "challenges:verify"
+VERIFY_CERTS_PATH = API_PATH + "certs:verify"
 
-
-'''def default_request_callback(status: int, response):
-    print("\n", "Got request with status:", status, "\n", end="")
-    print("Got request data:\n", json.dumps(response, sort_keys=True, indent=True), end="")
-'''
 
 class AuthIDAgentClient:
     def __init__(self, host: str = DEFAULT_HOST, port: str = DEFAULT_PORT,
@@ -36,6 +31,7 @@ class AuthIDAgentClient:
         self.__challenges_path = self.__base_url + CHALLENGES_PATH
         self.__sign_challenge_path = self.__base_url + SIGN_CHALLENGE_PATH
         self.__verify_challenge_path = self.__base_url + VERIFY_CHALLENGE_PATH
+        self.__verify_certs_path = self.__base_url + VERIFY_CERTS_PATH
 
         self.__request_callback = request_callback
 
@@ -101,10 +97,15 @@ class AuthIDAgentClient:
         return request.status_code, request.json()
 
     def verify_challenge(self, signed_challenge: dict):
+        request = requests.post(self.__verify_challenge_path, json=signed_challenge)
 
-        print("signed challenge:", signed_challenge)
-        request = requests.post(self.__verify_challenge_path, signed_challenge,
-                                headers={"Content-Type": "application/json"})
+        return request.status_code, request.json()
+
+    def verify_cert(self, cert: dict):
+        request = requests.post(self.__verify_challenge_path, json=cert)
+
+        if request.status_code == 200:
+            self.add_request_listener(request.json()["requestID"])
 
         return request.status_code, request.json()
 

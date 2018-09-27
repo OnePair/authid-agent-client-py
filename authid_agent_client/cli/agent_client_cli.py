@@ -112,7 +112,7 @@ class AgentClientCli(Cmd):
 
         arg_list = args.split(" ")
 
-        if len(arg_list) != 2 == "":
+        if len(arg_list) != 2:
             print("Invalid syntax!")
             print("Proper syntax: create_challenge <your id> <receiver id>")
             return
@@ -142,7 +142,10 @@ class AgentClientCli(Cmd):
         Syntax: verify_challenge <signed_challenge>
         """
 
-        decoded_signed_challenge = base64.b64decode(signed_challenge).decode()
+        decoded_signed_challenge = json.loads(base64.b64decode(signed_challenge).decode())
+
+        authid = decoded_signed_challenge["id_doc"]["id"] + "." + decoded_signed_challenge["id_doc"]["protocol"]
+        print("Verifying response from", authid)
 
         status, result = self.__agent_client.verify_challenge(decoded_signed_challenge)
 
