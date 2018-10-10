@@ -102,10 +102,9 @@ class AuthIDAgentClient:
         return request.status_code, request.json()
 
     def verify_cert(self, cert: dict):
-        request = requests.post(self.__verify_challenge_path, json=cert)
+        print("verifying cert:", cert)
 
-        if request.status_code == 200:
-            self.add_request_listener(request.json()["requestID"])
+        request = requests.post(self.__verify_certs_path, json=cert)
 
         return request.status_code, request.json()
 
