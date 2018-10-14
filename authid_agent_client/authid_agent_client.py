@@ -15,6 +15,7 @@ CHALLENGES_PATH = API_PATH + "challenges/"
 SIGN_CHALLENGE_PATH = API_PATH + "challenges:sign"
 VERIFY_CHALLENGE_PATH = API_PATH + "challenges:verify"
 VERIFY_CERTS_PATH = API_PATH + "certs:verify"
+SIGN_CERT_PATH = API_PATH + "certs:sign"
 
 
 class AuthIDAgentClient:
@@ -32,6 +33,7 @@ class AuthIDAgentClient:
         self.__sign_challenge_path = self.__base_url + SIGN_CHALLENGE_PATH
         self.__verify_challenge_path = self.__base_url + VERIFY_CHALLENGE_PATH
         self.__verify_certs_path = self.__base_url + VERIFY_CERTS_PATH
+        self.__sign_cert_path = self.__base_url + SIGN_CERT_PATH
 
         self.__request_callback = request_callback
 
@@ -104,6 +106,14 @@ class AuthIDAgentClient:
     def verify_cert(self, cert: dict):
 
         request = requests.post(self.__verify_certs_path, json=cert)
+
+        return request.status_code, request.json()
+
+    def sign_cert(self, authid: str, cert: dict):
+        request = requests.post(self.__sign_cert_path, params={"id": authid}, json=cert)
+
+        if request.status_code == 200:
+            self.add_request_listener(request.json()["requestID"])
 
         return request.status_code, request.json()
 
