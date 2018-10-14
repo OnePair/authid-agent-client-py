@@ -187,7 +187,11 @@ class AgentClientCli(Cmd):
             print("Got request data:\n", json.dumps(response, sort_keys=True, indent=True), end="")
 
 
-if __name__ == "__main__":
+def run_cli():
     app = AgentClientCli()
     app.prompt = "authid-agent-client>"
     app.cmdloop("Starting authid angent client...")
+
+
+if __name__ == "__main__":
+    run_cli()
