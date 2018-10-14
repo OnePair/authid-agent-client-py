@@ -154,9 +154,9 @@ class AgentClientCli(Cmd):
 
     def do_verify_cert(self, cert):
         """
-                Verify cert
-                Syntax: verify_challenge <signed_challenge>
-                """
+        Verify cert
+        Syntax: verify_cert <signed_cert>
+        """
 
         decoded_cert = json.loads(base64.b64decode(cert).decode())
 
@@ -167,7 +167,6 @@ class AgentClientCli(Cmd):
 
         print("status:", status)
         print("request info:", result)
-
 
     def do_clear(self, args):
         if os.name == "nt":
